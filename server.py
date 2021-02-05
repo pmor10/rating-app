@@ -49,7 +49,27 @@ def user_detail(user_id):
 
     return render_template('user_details.html', user=user)
 
+# creating a route for user to create a account
+@app.route('/users', methods=['POST'])
+def register_user():
+    """create a new user"""
+
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    user = crud.get_user_by_email(email)
+
+    if user:
+        flash('Account already exists. Please try again')
+    else:
+        crud.create_user(email, password)
+        flash('Account created successfully! Please log in. ')
+
+    return redirect('/')
+
+
 
 if __name__ == '__main__':
+
     connect_to_db(app)
     app.run(debug=True, host='0.0.0.0')
